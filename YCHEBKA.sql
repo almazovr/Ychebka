@@ -8,9 +8,9 @@ go
 
 insert into Positions (NamePosit)
 values
-('Администратор'),
-('Лаборант'),
-('Руководитель');
+('РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ'),
+('Р›Р°Р±РѕСЂР°РЅС‚'),
+('Р СѓРєРѕРІРѕРґРёС‚РµР»СЊ');
 go
 
 
@@ -21,14 +21,14 @@ create table  Employees(
 	FullNames varchar (50) not null,
 	Email varchar (30) not null unique,
 	Positions_ID int not null foreign key references Positions (ID_Positions)
-);
+);	
 go
 
 insert into Employees(Logins,Passwords,FullNames,Email,Positions_ID)
 values
-('rarara123','12345','Морарь Роман Олегович','almazovr206@gmail.com','1'),
-('yesyesyes321','54321','Святов Глеб Андреевич','megaChel228@gmail.com','2'),
-('nnnnoooooo6583','15243','Проварёнов Алексей Андреевич','nepovar228@gmail.com','3');
+('rarara123','12345','РњРѕСЂР°СЂСЊ Р РѕРјР°РЅ РћР»РµРіРѕРІРёС‡','almazovr206@gmail.com','1'),
+('yesyesyes321','54321','РЎРІСЏС‚РѕРІ Р“Р»РµР± РђРЅРґСЂРµРµРІРёС‡','megaChel228@gmail.com','2'),
+('nnnnoooooo6583','15243','РџСЂРѕРІР°СЂС‘РЅРѕРІ РђР»РµРєСЃРµР№ РђРЅРґСЂРµРµРІРёС‡','nepovar228@gmail.com','3');
 go
 
 select * from Employees
@@ -44,10 +44,10 @@ go
 
 insert into Analuzes_samples (NameAnalizes)
 values
-('Кровь'),
-('Моча'),
-('Кал'),
-('Мазок');
+('РљСЂРѕРІСЊ'),
+('РњРѕС‡Р°'),
+('РљР°Р»'),
+('РњР°Р·РѕРє');
 go
 
 create table Analyse_type(
@@ -58,33 +58,33 @@ go
 
 insert into Analyse_type (NameType)
 values
-('Общий анализ крови'),
-('Анализ мочи'),
-('Анализ кала'),
-('Гормональные исследования');
+('РћР±С‰РёР№ Р°РЅР°Р»РёР· РєСЂРѕРІРё'),
+('РђРЅР°Р»РёР· РјРѕС‡Рё'),
+('РђРЅР°Р»РёР· РєР°Р»Р°'),
+('Р“РѕСЂРјРѕРЅР°Р»СЊРЅС‹Рµ РёСЃСЃР»РµРґРѕРІР°РЅРёСЏ');
 go
 
  TRUNCATE TABLE Analuzes_samples
 
 select * from Analyse_type
 select * from Analuzes_samples
-
+drop table Analysis
 
 
 create table Analysis(
 	ID_Analyses int primary key identity (1,1),
 	due_data date not null,
 	samples_ID int not null foreign key references Analuzes_samples (ID_samples),
-	Type_ID int not null foreign key references Analyse_type(ID_Type)
+	Types_ID int not null foreign key references Analyse_type(ID_Type)
 );
 go
 
-insert into Analysis (due_data,samples_ID,Type_ID)
+insert into Analysis (due_data,samples_ID,Types_ID)
 values
-('30.05.2025'),('1'),('1'),
-('10.06.2025'),('2'),('2'),
-('13.06.2025'),('3'),('3'),
-('20.07.2025'),('4'),('4');
+('30.05.2025',1,1),
+('10.06.2025',2,2),
+('13.06.2025',3,3),
+('20.07.2025',4,4);
 go
 
 
@@ -96,6 +96,16 @@ go
 );
 go
 
+insert into Payment_method (Name_Payment)
+values
+('РќР°Р»РёС‡РЅС‹РјРё'),
+('РљР°СЂС‚РѕР№'),
+('РџРµСЂРµРІРѕРґРѕРј');
+go
+
+select * from Analysis
+
+
 create table Patients(
 	ID_Patient int primary key identity (1,1),
 	Full_Name varchar (50) not null,
@@ -104,14 +114,30 @@ create table Patients(
 );
 go
 
+insert into Patients (Full_Name, Date_Of_Birth, Phone)
+values
+('Р‘РёРєС‚РёРјРёСЂРѕРІ Р СѓСЃР»Р°РЅ РћР»РµРіРѕРІРёС‡','20.02.2006','+78005553535'),
+('РљРёСЂРёР»РѕРІ Р”РјРёС‚СЂРёР№ РЎРµСЂРіРµРµРІРёС‡','10.10.2000','+79234682945'),
+('Р’Р°СЃСЋРєРѕРІ РќРёРєРёС‚Р° РњР°РєСЃРёРјРѕРІРёС‡','12.05.1990','+70127588439'),
+('РџР°С…С‚СѓСЃРѕРІ РђРЅРґСЂРµР№ РђР»РµРєСЃР°РЅРґСЂРѕРІРёС‡','30.07.2004','+70135639456');
+go
+
 create table Orders(
 	ID_Orders int primary key identity (1,1),
-	Status nvarchar (30) not null,
+	Statuse nvarchar (30) not null,
 	Price decimal (10,2) not null,
 	Analyses_id int not null foreign key references Analysis (ID_Analyses),
-	Payment_ID int not null foreign key references Payment_method (ID_Patient),
-	ID_Patient int not null foreign key references Patients (ID_Patient)
+	Payment_ID int not null foreign key	 references Payment_method (ID_Payment),
+	Patient_ID int not null foreign key references Patients (ID_Patient)
 );
+go
+
+insert into Orders (Statuse,Price,Analyses_id,Payment_ID,Patient_ID)
+values
+('Р’ РїСЂРѕС†РµСЃРµ','10000','1','1','1'),
+('Р’ РїСЂРѕС†РµСЃСЃРµ','20000','2','2','2'),
+('Р“РѕС‚РѕРІ Рє РІС‹РґР°С‡Рµ','30000','3','3','3'),
+('Р’С‹РїРѕР»РЅРµРЅ','50000','4','2','4');
 go
 
 
